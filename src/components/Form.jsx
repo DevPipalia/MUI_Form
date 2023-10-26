@@ -16,6 +16,9 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
+import GoogleIcon from '@mui/icons-material/Google';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 
 function RegistrationForm() {
@@ -37,7 +40,10 @@ function RegistrationForm() {
     gender: '',
   });
 
-
+  const isSomaiyaEmail = (email) => {
+   
+    return email.toLowerCase().endsWith('@somaiya.edu');
+  };
 
   const handleChange = (e) => {
     const { name, value, checked } = e.target;
@@ -52,11 +58,10 @@ function RegistrationForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     let hasErrors = false;
-
-    // Check for empty fields
+  
     const requiredFields = ['username', 'email', 'password', 'gender'];
     const fieldErrors = {};
-
+  
     requiredFields.forEach((field) => {
       if (!formData[field]) {
         fieldErrors[field] = 'Field is required';
@@ -65,30 +70,32 @@ function RegistrationForm() {
         fieldErrors[field] = '';
       }
     });
-
-    setRequiredFieldErrors(fieldErrors);
-
-    if (hasErrors) {
-      return;
+  
+    if (!isSomaiyaEmail(formData.email)) {
+      fieldErrors.email = 'Please enter a correct Somaiya email address.';
+      hasErrors = true;
     }
-
-    // Password validation
+  
+    setRequiredFieldErrors(fieldErrors);
+  
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(formData.password)) {
-      setPasswordError('Password must contain one uppercase, one lowercase, one number, and one special character');
+      setPasswordError(
+        'Password must contain one uppercase, one lowercase, one number, and one special character'
+      );
       hasErrors = true;
     } else {
       setPasswordError('');
     }
-
+  
     if (hasErrors) {
       return;
     }
-
-    // You can handle successful form submission here
+  
     console.log(formData);
-    navigate('/welcome'); // Redirect to the '/welcome' route after successful submission
+    navigate('/welcome'); 
   };
+  
 
   
   const [showPassword, setShowPassword] = useState(false);
@@ -109,6 +116,7 @@ function RegistrationForm() {
         background: '#F25B55',
         padding: '20px',
         borderRadius: '10px',
+      
         
         marginTop: '50px',
         textAlign: 'center',
@@ -117,7 +125,8 @@ function RegistrationForm() {
       <Typography variant="h4" gutterBottom style={{ fontFamily: 'Poppins' }}>
         Sign in to your KJSCE account
       </Typography>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}
+      >
         <TextField
           label="Username"
           variant="standard"
@@ -192,7 +201,7 @@ function RegistrationForm() {
             name="gender"
             value={formData.gender}
             onChange={handleChange}
-            row // Display options horizontally
+            row 
           >
             <FormControlLabel
               value="male"
@@ -218,9 +227,54 @@ function RegistrationForm() {
           }
           label="I accept all the terms and conditions"
         />
-        <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: '20px' }}>
-          Submit
-        </Button>
+        <Button
+  type="submit"
+  fullWidth
+  sx={{
+    display: 'flex',
+    alignItems: 'center',
+    fontFamily: 'inherit',
+    fontWeight: 500,
+    fontSize: '16px',
+    padding: '0.7em 1.4em 0.7em 1.1em',
+    color: 'black', 
+    backgroundColor: '#70F4FA',
+    border: 'none',
+    boxShadow: '0 0.7em 1.5em -0.5em #14a73e98',
+    letterSpacing: '0.05em',
+    borderRadius: '20em',
+    cursor: 'pointer',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    touchAction: 'manipulation',
+    '&:hover': {
+      backgroundColor: '#4DE5E7',
+      boxShadow: '0 1em 2em -0.5em #14a73e98', 
+    },
+    '&:active': {
+      boxShadow: '0 0.3em 1em -0.5em #14a73e98',
+    },
+  }}
+  style={{ marginTop: '20px' }}
+>
+  Submit
+</Button>
+
+<Typography variant="h6" style={{ color: 'white', marginTop: '20px' }}>
+  or sign in with
+</Typography>
+
+  <IconButton style={{ marginRight: '60px' }}>
+    <GoogleIcon style={{ fontSize: 40, color: 'black' }} />
+  </IconButton>
+  <IconButton style={{ marginRight: '60px' }}>
+    <GitHubIcon style={{ fontSize: 40, color: 'black' }} />
+  </IconButton>
+  <IconButton>
+    <LinkedInIcon style={{ fontSize: 40, color: 'black' }} />
+  </IconButton>
+
+
       </form>
     </Container>
   );
